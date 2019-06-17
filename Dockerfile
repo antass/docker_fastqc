@@ -1,48 +1,19 @@
-################################################################
-# Dockerfile to build container images for RNA-seq pipeline
-# including hisat2, sratools, samtools, stringtie and gffcompare
+############################################################
+# Dockerfile to build FASTQC container images
 # Based on Ubuntu
-################################################################
+############################################################
 
-FROM rocker/tidyverse:3.4.2
+# Set the base image to Ubuntu
+FROM ubuntu:14.04
 
 # File Author / Maintainer
 MAINTAINER Ania Tassinari <ania.tassinari@agios.com>
 
-# install dependencies first
-RUN apt-get update  && apt-get install -y \
-    build-essential \
-    gcc-multilib \
-    zlib1g-dev \
-    curl \
-    wget \
-    cmake \
-    python \
-    python-pip \
-    python-dev \
-    python2.7-dev \
-    python-numpy \
-    python-matplotlib \
-    hdf5-tools \
-    libhdf5-dev \
-    hdf5-helpers \
-    libhdf5-serial-dev \
-    libssh2-1-dev \
-    libcurl4-openssl-dev \
-    icu-devtools \
-    libssl-dev \
-    libxml2-dev \
-    r-bioc-biobase \
-    git \
-    apt-utils \
-    pigz \
-    default-jre \
+# Install OpenJDK 7 JRE
+RUN apt-get update && apt-get install --yes \
     openjdk-7-jre \
     perl \
     unzip
-
-
-WORKDIR /docker
 
 # Download FastQC
 ADD http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.8.zip /tmp/
@@ -54,6 +25,7 @@ RUN cd /usr/local && \
     ln -s /usr/local/FastQC/fastqc /usr/local/bin/fastqc && \
     rm -rf /tmp/fastqc_*.zip
 
+ENTRYPOINT ["fastqc"]
+
 WORKDIR /docker
 
-ENTRYPOINT ["fastqc"]
